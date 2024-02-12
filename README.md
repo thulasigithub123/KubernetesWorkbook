@@ -205,3 +205,64 @@ to list service
 
 to get the url of the service
 `kubectl service web-deploy --url`
+
+
+==================================
+
+# SERVICES
+
+every pod gets a unique ip address
+
+pods are ephemeral in nature
+
+when a pod dies it will be replaced by a new pod which will have a different IP address
+
+
+to overcome this situation
+k8s provides a higher level of abstraction called `service` which logically groups the pods and defines a policy to access them.
+
+### So service provides a stable IP address
+
+and if you want to expose your application that is running on multiple pod replicas outside the cluster then you have to create a service
+
+The service identifies the pods using selector through labels
+
+Labels are key-value pair which are used to organize and select a subset of Pods
+
+## Types of service
+
+1. clusterIP ( default )
+2. NodePort
+3. LoadBalancer
+
+ClusterIP : `( clusterIP address)`
+    
+- a service receives a virtual IP address known as cluster IP.
+- this virtual IP address is used for communicating with the service and is ONLY accessible within the cluster
+
+NodePort:  `(clusterIP address + random port)`
+
+- in addition to cluster IP, a port is dynammically picked from the range 30,000-32,767 and is mapped to the respective service
+
+- eg: if the mapped port is 32,750 for this service, if we connect to any worker node on port number 32750, we will be redirected to the assigned clusterIP of the service
+
+- the nodeport type of service is useful if you want to make your service accessible to the external world ( outside the cluster)
+
+LoadBalancer: `( clusterIP address + random port + external IP)`
+
+- this external ip is the load balancer ip from extenal managed service ( aks, eks, gke ) for routing 
+
+- this works only if we use managed cluster from cloud provider
+- this type of service is exposed externally using the underlying cloud provider's load balancer
+
+# HANDS ON
+
+create 3 ec2 instances
+
+ubuntu 20.04
+t2.medium - 2cpus, 4gb ram
+default vpc
+subnet - any
+security group - all traffic from anywhere (inbound)
+ 
+
